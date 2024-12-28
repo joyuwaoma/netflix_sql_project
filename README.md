@@ -15,7 +15,7 @@ This project uses SQL to comprehensively analyze data on India's Netflix movies 
 The data for this project was obtained from [Kaggle](https://www.kaggle.com/datasets/shivamb/netflix-shows?resource=download) 
 
 ## Schema
-```
+```sql
 CREATE TABLE netflix
 (
 	show_id VARCHAR(6),
