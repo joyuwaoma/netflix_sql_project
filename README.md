@@ -34,7 +34,7 @@ CREATE TABLE netflix
 
 ```
 ## 15 Business Problems and Solutions
-### 1. Count the Number of Movies vs TV Shows
+#### 1. Count the Number of Movies vs TV Shows
 ```sql
 SELECT 
 	type,
@@ -42,7 +42,7 @@ SELECT
 FROM netflix
 GROUP BY type
 ```
-### 2. Find the most common rating for movies and TV shows
+#### 2. Find the most common rating for movies and TV shows
 ```sql
 SELECT
 	type,
@@ -59,11 +59,47 @@ FROM netflix
 ) as t1
 WHERE ranking = 1
  ```
-### 3. List all movies released in a specific year (e.g., 2020)
+#### 3. List all movies released in a specific year (e.g., 2020)
 ```sql
 SELECT * FROM netflix
 WHERE
 	type = 'Movie'
 	AND 
 	release_year = 2020
+```
+#### 4. Find the top 5 countries with the most content on Netflix
+```sql
+SELECT 
+	UNNEST(STRING_TO_ARRAY(country, ',')) AS new_country,
+	COUNT(show_id) AS total_content
+FROM netflix
+GROUP BY 1
+ORDER BY total_content DESC
+LIMIT 5
+```
+#### 5. Identify the longest movie or TV show duration
+```sql
+SELECT * FROM netflix
+WHERE
+	type = 'Movie' 
+	AND duration = (SELECT MAX(duration) FROM netflix)
+```
+#### 6. Find content added in the last 5 years
+```sql
+SELECT * FROM netflix
+WHERE 
+	TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '5 years'
+```
+#### 7. Find all the movies/TV shows by director 'Rajiv Chilaka'!
+```sql
+SELECT * FROM netflix
+WHERE director ILIKE '%Rajiv Chilaka%'
+```
+#### 8. List all TV shows with more than 5 seasons
+```sql
+SELECT * FROM netflix
+WHERE 
+	type = 'TV Show'
+	AND 
+	SPLIT_PART(duration, ' ', 1)::numeric > 5
 ```
