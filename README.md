@@ -33,3 +33,37 @@ CREATE TABLE netflix
 );
 
 ```
+## 15 Business Problems and Solutions
+### 1. Count the Number of Movies vs TV Shows
+```sql
+SELECT 
+	type,
+	COUNT (*) AS total_content
+FROM netflix
+GROUP BY type
+```
+### 2. Find the most common rating for movies and TV shows
+```sql
+SELECT
+	type,
+	rating
+FROM netflix
+(
+	SELECT 
+		type,
+		rating,
+		COUNT(*),
+		RANK() OVER(PARTITION BY type ORDER BY COUNT(*) DESC) AS ranking
+	FROM netflix
+	GROUP BY 1, 2
+) as t1
+WHERE ranking = 1
+ ```
+### 3. List all movies released in a specific year (e.g., 2020)
+```sql
+SELECT * FROM netflix
+WHERE
+	type = 'Movie'
+	AND 
+	release_year = 2020
+```
