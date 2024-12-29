@@ -112,8 +112,9 @@ FROM netflix
 GROUP BY 1
 ```
 #### 10. Find each year and the average numbers of content release by india on netflix, return top 5 year with highest avg content release
--- total content 333/972
 ```sql
+-- total content 333/972
+
 SELECT 
 	EXTRACT(YEAR FROMM TO_DATE(date_added, 'Month DD, YYYY')) AS year,
 	COUNT(*),
@@ -121,5 +122,33 @@ SELECT
 	COUNT(*)::numeric/(SELECT COUNT (*) FROM netflix WHERE country = 'India')::numeric * 100,2) AS avg_content_per_year
 FROM netflix
 WHERE country = 'India'
+GROUP BY 1
+```
+#### 11. List all movies that are documentaries
+```sql
+SELECT * FROM netflix
+WHERE 
+	listed_in ILIKE '%documentaries%'
+```
+#### 12. Find all content without a director
+```sql
+SELECT * FROM netflix
+WHERE 
+	director IS NULL
+```
+#### 13. Find how many movies actor 'Salman Khan' has appeared in the last 10 years!
+```sql
+SELECT * FROM netflix
+WHERE 
+	casts ILIKE '%Salman Khan%'
+	AND 
+	release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 10
+```
+#### 14. Find the top 10 actors who have appeared in the highest number of movies produced in
+```SQL
+SELECT 
+UNNEST(STRING_TO_ARRAY(casts,',')) AS actors,
+COUNT(*) AS total_content
+FROM netflix
 GROUP BY 1
 ```
