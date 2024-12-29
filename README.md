@@ -3,7 +3,7 @@
 ![Netflix Logo](https://github.com/joyuwaoma/netflix_sql_project/blob/main/netflix-5947489_1280.png)
 
 ## Overview
-This project uses SQL to comprehensively analyze data on India's Netflix movies and TV shows. The goal is to extract valuable insights and answer various business questions based on the dataset. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
+This project uses SQL to analyze Netflix movies and TV shows data comprehensively. The goal is to extract valuable insights and answer various business questions based on the dataset. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
 
 ## Objectives
 * Analyze the distribution of content types (movies vs TV shows). 
@@ -112,10 +112,14 @@ FROM netflix
 GROUP BY 1
 ```
 #### 10. Find each year and the average numbers of content release by india on netflix, return top 5 year with highest avg content release
+-- total content 333/972
 ```sql
 SELECT 
-	date_added,
-	
+	EXTRACT(YEAR FROMM TO_DATE(date_added, 'Month DD, YYYY')) AS year,
+	COUNT(*),
+	ROUND(
+	COUNT(*)::numeric/(SELECT COUNT (*) FROM netflix WHERE country = 'India')::numeric * 100,2) AS avg_content_per_year
 FROM netflix
 WHERE country = 'India'
+GROUP BY 1
 ```
