@@ -103,3 +103,19 @@ WHERE
 	AND 
 	SPLIT_PART(duration, ' ', 1)::numeric > 5
 ```
+#### 9. Count the number of content items in each genre
+```sql
+SELECT 
+	UNNEST(STRING_TO_ARRAY(listed_in, ',')) AS genre,
+	COUNT(show_id) AS total_content
+FROM netflix
+GROUP BY 1
+```
+#### 10. Find each year and the average numbers of content release by india on netflix, return top 5 year with highest avg content release
+```sql
+SELECT 
+	date_added,
+	
+FROM netflix
+WHERE country = 'India'
+```
