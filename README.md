@@ -34,7 +34,7 @@ CREATE TABLE netflix
 
 ```
 ## 15 Business Problems and Solutions
-#### 1. Count the Number of Movies vs TV Shows
+#### 1. Count the Number of Movies vs TV Shows.
 ```sql
 SELECT 
 	type,
@@ -42,7 +42,7 @@ SELECT
 FROM netflix
 GROUP BY type
 ```
-#### 2. Find the most common rating for movies and TV shows
+#### 2. Find the most common rating for movies and TV shows.
 ```sql
 SELECT
 	type,
@@ -67,7 +67,7 @@ WHERE
 	AND 
 	release_year = 2020
 ```
-#### 4. Find the top 5 countries with the most content on Netflix
+#### 4. Find the top 5 countries with the most content on Netflix.
 ```sql
 SELECT 
 	UNNEST(STRING_TO_ARRAY(country, ',')) AS new_country,
@@ -77,14 +77,14 @@ GROUP BY 1
 ORDER BY total_content DESC
 LIMIT 5
 ```
-#### 5. Identify the longest movie or TV show duration
+#### 5. Identify the longest movie or TV show duration.
 ```sql
 SELECT * FROM netflix
 WHERE
 	type = 'Movie' 
 	AND duration = (SELECT MAX(duration) FROM netflix)
 ```
-#### 6. Find content added in the last 5 years
+#### 6. Find content added in the last 5 years.
 ```sql
 SELECT * FROM netflix
 WHERE 
@@ -95,7 +95,7 @@ WHERE
 SELECT * FROM netflix
 WHERE director ILIKE '%Rajiv Chilaka%'
 ```
-#### 8. List all TV shows with more than 5 seasons
+#### 8. List all TV shows with more than 5 seasons.
 ```sql
 SELECT * FROM netflix
 WHERE 
@@ -103,7 +103,7 @@ WHERE
 	AND 
 	SPLIT_PART(duration, ' ', 1)::numeric > 5
 ```
-#### 9. Count the number of content items in each genre
+#### 9. Count the number of content items in each genre.
 ```sql
 SELECT 
 	UNNEST(STRING_TO_ARRAY(listed_in, ',')) AS genre,
@@ -111,7 +111,7 @@ SELECT
 FROM netflix
 GROUP BY 1
 ```
-#### 10. Find each year and the average numbers of content release by india on netflix, return top 5 year with highest avg content release
+#### 10. Find each year and the average numbers of content release by india on netflix, return top 5 year with highest avg content release.
 ```sql
 -- total content 333/972
 
@@ -124,13 +124,13 @@ FROM netflix
 WHERE country = 'India'
 GROUP BY 1
 ```
-#### 11. List all movies that are documentaries
+#### 11. List all movies that are documentaries.
 ```sql
 SELECT * FROM netflix
 WHERE 
 	listed_in ILIKE '%documentaries%'
 ```
-#### 12. Find all content without a director
+#### 12. Find all content without a director.
 ```sql
 SELECT * FROM netflix
 WHERE 
@@ -144,11 +144,33 @@ WHERE
 	AND 
 	release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 10
 ```
-#### 14. Find the top 10 actors who have appeared in the highest number of movies produced in
-```SQL
+#### 14. Find the top 10 actors who have appeared in the highest number of movies produced in.
+```sql
 SELECT 
 UNNEST(STRING_TO_ARRAY(casts,',')) AS actors,
 COUNT(*) AS total_content
 FROM netflix
+WHERE country ILIKE '%india'
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
+```
+#### 15. Categorize the content based on the presence of the keywords 'kill' and 'violence' in the description field. Label the content containing these keywords as 'Bad' and all other content as 'Good'. Count how many items fall into each category.
+```sql
+WITH new_table 
+AS (
+SELECT * ,
+	CASE
+	WHEN	
+		description ILIKE '%kill%' OR
+		description ILIKE '%violence%' THEN 'Bad_Content'
+		ELSE 'Good_Content'
+	END category
+FROM netflix
+)
+SELECT
+	category,
+	COUNT(*) AS total_content
+FROM new_table
 GROUP BY 1
 ```
