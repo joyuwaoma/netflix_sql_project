@@ -47,7 +47,7 @@ GROUP BY type
 SELECT
 	type,
 	rating
-FROM netflix
+FROM
 (
 	SELECT 
 		type,
